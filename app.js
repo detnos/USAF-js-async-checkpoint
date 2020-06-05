@@ -74,7 +74,7 @@ for (var i = 0; i < namelines.length; i++) {
   //console output the information in this format:
   /*
   Charizard: flying, fire
-  Pikachu: electric
+  Pikachu: electric 
   */
  console.log(typesObj);
 
