@@ -1,5 +1,7 @@
 const fetch = require('node-fetch');
 
+var fs = require('fs');
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -43,5 +45,41 @@ app.use(function(err, req, res, next) {
 module.exports = app;
 
 //coding for the pokemon api
-var input = 'input.txt'
-input.forEach(pokemon => console.log(pokemon))
+let input = 'input.txt';
+
+var data = fs.readFileSync(input);
+
+console.log(data);
+var typesObj = {};
+
+var namelines = data.toString().split('\n');
+console.log(namelines)
+//iterate over the pokemon and fetch the appropriate data (their types (can be more than 1))
+for (var i = 0; i < namelines.length; i++) {
+  //log their types on an array
+  typesObj[namelines[i]] = []
+  fetch('https://pokeapi.co/api/v2/pokemon/' + namelines[i])
+    .then(response => response.json()) // turn the response into json
+    .then(json => { 
+      //console.log('NAME: ',json.name);
+      //console.log('namelines: ', namelines[i])
+      let pokeType = json.types;
+      pokeType.forEach(typeItem => {
+        console.log(typeItem.type.name)
+        typesObj[json.name].push(typeItem.type.name)
+        console.log(typesObj)
+      });
+      
+    })
+  //console output the information in this format:
+  /*
+  Charizard: flying, fire
+  Pikachu: electric
+  */
+ console.log(typesObj);
+
+}
+
+for (var key in typesObj) {
+  console.log('key', key, typesObj[key]);
+}
